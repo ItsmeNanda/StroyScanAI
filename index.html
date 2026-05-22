@@ -54,7 +54,7 @@
                 <span class="text-3xl animate-bounce"></span> StoryScan <span class="text-yellow-400">AI</span>
             </h1>
             <button onclick="showMainMenu()" id="btn-back" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-600 font-bold py-2 px-5 rounded-full transition duration-300 flex items-center gap-2 shadow-sm">
-                <span>🔙</span> Kembali
+                 Kembali
             </button>
         </div>
     </header>
@@ -129,7 +129,7 @@
         <div class="bg-white rounded-[2rem] p-5 md:p-6 w-full max-w-3xl text-center shadow-2xl relative border-b-[6px] border-sky-100 flex flex-col h-auto max-h-[96vh] my-auto overflow-y-auto no-scrollbar">
             
             <div class="mb-3 flex-shrink-0 mt-2">
-                <h2 id="context-title" class="text-2xl md:text-3xl font-black text-sky-500 mb-2 animate-bounce">Waktunya Beraksi! 🚀</h2>
+                <h2 id="context-title" class="text-2xl md:text-3xl font-black text-sky-500 mb-2 animate-bounce">Waktunya Beraksi!</h2>
                 <p class="text-slate-500 font-semibold text-base md:text-lg">Carikan <span id="target-name" class="font-black text-yellow-500 text-xl md:text-2xl uppercase tracking-wider bg-yellow-50 px-2 py-1 rounded-xl border border-yellow-200">BENDA</span> untuk membantunya!</p>
             </div>
             
@@ -349,7 +349,7 @@
             
             if(player && typeof player.pauseVideo === 'function') player.pauseVideo();
             
-            document.getElementById('context-title').innerText = contextMsg + " 🚀";
+            document.getElementById('context-title').innerText = contextMsg;
             document.getElementById('target-name').innerText = objName;
             
             document.getElementById('success-btn').classList.add('hidden'); 
