@@ -20,7 +20,7 @@
             height: 0;
             overflow: hidden;
             border-radius: 1.5rem;
-            border: 6px solid #e0f2fe; /* border-sky-100 */
+            border: 6px solid #e0f2fe;
         }
         .video-container iframe {
             position: absolute;
@@ -39,7 +39,7 @@
                 <span class="text-3xl animate-bounce">✨</span> StoryScan <span class="text-yellow-400">AI</span>
             </h1>
             <button onclick="showMainMenu()" id="btn-back" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-600 font-bold py-2 px-5 rounded-full transition duration-300 flex items-center gap-2 shadow-sm">
-                 Kembali
+                <span>🔙</span> Kembali
             </button>
         </div>
     </header>
@@ -158,25 +158,25 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // Data trigger sudah diubah menyesuaikan kelas yang baru
         const storyData = {
             'cerita1': {
                 title: 'Kisah Gajah dan Semut',
                 videoId: 'sMW_fy8Lttg', 
                 triggers: [
                     { time: 10, object: 'Tas', isDone: false },   
-                    { time: 15, object: 'Kursi', isDone: false },  
+                    { time: 30, object: 'Kursi', isDone: false },  
                 ]
             },
             'cerita2': {
                 title: 'Guru Baru Kelinci',
                 videoId: 'XREMYlL2KwA', 
                 triggers: [
-                    { time: 10, object: 'Buku', isDone: false },   
+                    { time: 15, object: 'Buku', isDone: false },   
                     { time: 45, object: 'Pulpen', isDone: false }  
                 ]
             }
         };
+
         const MODEL_URL = "https://teachablemachine.withgoogle.com/models/DET9DIWQd/"; 
         
         let model, webcam, labelContainer, maxPredictions;
@@ -241,7 +241,6 @@
             let highestProb = 0;
             let currentTopClass = "";
 
-            // Cari prediksi tertinggi
             for (let i = 0; i < maxPredictions; i++) {
                 if (prediction[i].probability > highestProb) {
                     highestProb = prediction[i].probability;
@@ -249,22 +248,18 @@
                 }
             }
 
-            // Update Progress Bar
             const confidencePercent = Math.round(highestProb * 100);
             const bar = document.getElementById('confidence-bar');
             bar.style.width = confidencePercent + '%';
 
-            // Bersihkan nama benda (huruf kecil semua, hilangkan spasi sisa)
             let namaBendaAI = currentTopClass.trim().toLowerCase();
-
-            // Cek apakah barangnya sama dengan yang diminta sistem
             const isMatch = (namaBendaAI === targetObject.trim().toLowerCase());
 
             if (isMatch && highestProb > 0.80) { 
                 bar.classList.replace('bg-sky-400', 'bg-green-400');
                 if (labelContainer) {
                     labelContainer.innerHTML = "🎉 Hore! Ketemu!";
-                    labelContainer.classList.replace('text-sky-500', 'text-green-500');
+                    labelContainer.classList.replace('text-slate-600', 'text-green-500');
                 }
                 
                 isScanning = false; 
@@ -275,7 +270,7 @@
             } else {
                 if (labelContainer) {
                     labelContainer.innerHTML = "Mencari " + targetObject + "... 🧐";
-                    labelContainer.classList.replace('text-green-500', 'text-sky-500');
+                    labelContainer.classList.replace('text-green-500', 'text-slate-600');
                 }
             }
         }
@@ -349,8 +344,8 @@
             
             const lbl = document.getElementById('label-container');
             if(lbl) {
-                lbl.innerHTML = "AI sedang melihat... 👀";
-                lbl.classList.replace('text-green-500', 'text-sky-500');
+                lbl.innerHTML = "AI sedang mengamati... 👀";
+                lbl.classList.replace('text-green-500', 'text-slate-600');
             }
 
             document.getElementById('confidence-bar').style.width = '0%';
