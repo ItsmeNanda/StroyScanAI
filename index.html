@@ -14,6 +14,16 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
+        /* Animasi garis scanner dinamis */
+        @keyframes scanAnimResponsive {
+            0% { top: 0%; opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { top: 96%; opacity: 0.5; }
+        }
+        .scan-animation {
+            animation: scanAnimResponsive 2.5s infinite ease-in-out alternate;
+        }
+
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -29,6 +39,11 @@
             width: 100%;
             height: 100%;
         }
+
+        /* Menyembunyikan scrollbar bawaan agar rapi */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-sky-50 min-h-screen font-sans text-slate-700 selection:bg-yellow-200">
@@ -36,7 +51,7 @@
     <header class="bg-white shadow-sm py-4 mb-8 sticky top-0 z-40 rounded-b-[2rem] border-b-8 border-yellow-300">
         <div class="max-w-5xl mx-auto px-6 flex justify-between items-center">
             <h1 class="text-2xl md:text-3xl font-extrabold text-sky-500 tracking-wide flex items-center gap-2">
-                <span class="text-3xl animate-bounce">✨</span> StoryScan <span class="text-yellow-400">AI</span>
+                <span class="text-3xl animate-bounce"></span> StoryScan <span class="text-yellow-400">AI</span>
             </h1>
             <button onclick="showMainMenu()" id="btn-back" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-600 font-bold py-2 px-5 rounded-full transition duration-300 flex items-center gap-2 shadow-sm">
                 <span>🔙</span> Kembali
@@ -100,42 +115,40 @@
             </div>
             
              <div class="mt-4 flex flex-wrap gap-2 justify-center opacity-60 hover:opacity-100 transition-opacity">
-                <button onclick="triggerInteraction('Buku')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Buku</button>
-                <button onclick="triggerInteraction('Pulpen')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Pulpen</button>
-                <button onclick="triggerInteraction('Kursi')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Kursi</button>
-                <button onclick="triggerInteraction('Tas')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Tas</button>
-                <button onclick="triggerInteraction('Meja')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Meja</button>
+                <button onclick="triggerInteraction('Buku', 'Cici butuh membaca materi pelajaran!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Buku</button>
+                <button onclick="triggerInteraction('Pulpen', 'Ayo bantu Cici mencatat pelajarannya!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Pulpen</button>
+                <button onclick="triggerInteraction('Kursi', 'Kaki Semut pegal, mari istirahat sejenak!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Kursi</button>
+                <button onclick="triggerInteraction('Tas', 'Bantu Semut mengangkat bahan makanan!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Tas</button>
+                <button onclick="triggerInteraction('Meja', 'Ayo cari Meja untuk meletakkan makanan!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Meja</button>
             </div>
         </div>
     </main>
 
-    <div id="scanModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center z-50 p-4 transition-all duration-300">
-        <div class="bg-white rounded-[2rem] p-8 w-full max-w-xl text-center shadow-[0_15px_50px_rgba(0,0,0,0.12)] relative border-b-[8px] border-sky-100 transform transition-all scale-100">
+    <div id="scanModal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md flex-col items-center justify-center z-50 p-2 md:p-4 transition-all duration-300 overflow-hidden">
+        
+        <div class="bg-white rounded-[2rem] p-5 md:p-6 w-full max-w-3xl text-center shadow-2xl relative border-b-[6px] border-sky-100 flex flex-col h-auto max-h-[96vh] my-auto overflow-y-auto no-scrollbar">
             
-            <div class="mb-5">
-                <div class="inline-flex items-center justify-center bg-amber-100 w-16 h-16 rounded-full mb-3 shadow-inner">
-                    <span class="text-3xl animate-bounce">📸</span>
-                </div>
-                <h2 class="text-2xl md:text-3xl font-black text-slate-800 mb-1 tracking-tight">Waktunya Beraksi!</h2>
-                <p id="instructionText" class="text-slate-500 font-medium">Tunjukkan <span id="target-name" class="font-black text-sky-500 text-xl uppercase tracking-wider">BENDA</span> ke layar</p>
+            <div class="mb-3 flex-shrink-0 mt-2">
+                <h2 id="context-title" class="text-2xl md:text-3xl font-black text-sky-500 mb-2 animate-bounce">Waktunya Beraksi! 🚀</h2>
+                <p class="text-slate-500 font-semibold text-base md:text-lg">Carikan <span id="target-name" class="font-black text-yellow-500 text-xl md:text-2xl uppercase tracking-wider bg-yellow-50 px-2 py-1 rounded-xl border border-yellow-200">BENDA</span> untuk membantunya!</p>
             </div>
             
-            <div class="flex justify-center mb-6 relative">
-                <div id="webcam-container" class="rounded-2xl overflow-hidden border-4 border-slate-100 shadow-lg w-[480px] h-[300px] bg-slate-50 flex items-center justify-center relative mx-auto">
-                    <span id="loading-cam" class="text-slate-400 font-bold text-sm flex flex-col items-center gap-3">
-                        <svg class="animate-spin h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        Menyiapkan Lensa AI...
+            <div class="my-3 relative mx-auto w-full max-w-[420px] flex-shrink-0" style="aspect-ratio: 4/3;">
+                <div id="webcam-container" class="rounded-2xl overflow-hidden border-4 border-slate-100 shadow-xl w-full h-full bg-slate-800 flex items-center justify-center relative [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-cover">
+                    <span id="loading-cam" class="text-slate-300 font-bold text-sm md:text-base flex flex-col items-center gap-3">
+                        <svg class="animate-spin h-8 w-8 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        Membuka Lensa Ajaib AI...
                     </span>
                 </div>
-                <div id="scan-line" class="absolute top-0 mx-auto w-[480px] h-2 bg-green-400 rounded-full shadow-[0_0_15px_rgba(74,222,128,0.6)] hidden z-10 opacity-80"></div>
+                <div id="scan-line" class="absolute left-0 right-0 mx-auto w-full h-2 bg-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)] hidden z-10 rounded-full scan-animation pointer-events-none"></div>
             </div>
             
             <div class="hidden">
                 <div id="ai-sight">Menyiapkan...</div>
             </div>
 
-            <div class="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 mx-auto max-w-md">
-                <div id="label-container" class="font-bold text-lg text-slate-600 mb-3 transition-colors">AI sedang mengamati... 👀</div>
+            <div class="flex-shrink-0 bg-slate-50 rounded-xl p-3 md:p-4 mb-4 border border-slate-100 mx-auto w-full max-w-[420px]">
+                <div id="label-container" class="font-bold text-lg md:text-xl text-slate-600 mb-2 transition-colors">AI sedang mengamati layarmu... 👀</div>
                 
                 <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden shadow-inner">
                     <div id="confidence-bar" class="bg-sky-400 h-full rounded-full transition-all duration-300 relative" style="width: 0%">
@@ -144,12 +157,12 @@
                 </div>
             </div>
 
-            <div class="flex flex-col gap-3 items-center">
-                <button id="success-btn" onclick="closeModalAndResume()" class="hidden w-full max-w-xs bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xl tracking-wide py-4 px-8 rounded-full shadow-[0_5px_0_rgb(16,185,129)] hover:shadow-[0_3px_0_rgb(16,185,129)] transform transition-all hover:translate-y-0.5 active:translate-y-1.5 active:shadow-none">
+            <div class="flex flex-col md:flex-row gap-3 items-center justify-center flex-shrink-0 mb-2">
+                <button id="success-btn" onclick="closeModalAndResume()" class="hidden w-full md:w-auto bg-emerald-500 hover:bg-emerald-400 text-white font-black text-lg md:text-xl tracking-wide py-3 px-8 rounded-full shadow-[0_5px_0_rgb(16,185,129)] hover:shadow-[0_3px_0_rgb(16,185,129)] transform transition-all hover:translate-y-0.5 active:translate-y-1.5 active:shadow-none">
                     ▶ LANJUT CERITA
                 </button>
 
-                <button id="skip-btn" onclick="closeModalAndResume()" class="text-slate-400 hover:text-slate-600 text-sm font-semibold hover:bg-slate-100 py-2.5 px-6 rounded-full transition-colors">
+                <button id="skip-btn" onclick="closeModalAndResume()" class="text-slate-400 hover:text-slate-600 text-sm md:text-base font-bold bg-slate-100 hover:bg-slate-200 py-2 px-6 rounded-full transition-colors">
                     Lewati Tugas Ini
                 </button>
             </div>
@@ -163,16 +176,16 @@
                 title: 'Kisah Gajah dan Semut',
                 videoId: 'sMW_fy8Lttg', 
                 triggers: [
-                    { time: 10, object: 'Tas', isDone: false },   
-                    { time: 30, object: 'Kursi', isDone: false },  
+                    { time: 45, object: 'Tas', context: 'Bantu Semut mengangkat bahan makanan!', isDone: false },   
+                    { time: 140, object: 'Kursi', context: 'Kaki Semut pegal, mari istirahat sejenak!', isDone: false },  
                 ]
             },
             'cerita2': {
                 title: 'Guru Baru Kelinci',
                 videoId: 'XREMYlL2KwA', 
                 triggers: [
-                    { time: 15, object: 'Buku', isDone: false },   
-                    { time: 45, object: 'Pulpen', isDone: false }  
+                    { time: 50, object: 'Buku', context: 'Cici butuh membaca materi pelajaran!', isDone: false },   
+                    { time: 120, object: 'Pulpen', context: 'Ayo bantu Cici mencatat pelajarannya!', isDone: false }  
                 ]
             }
         };
@@ -189,7 +202,6 @@
             if (isModelLoaded && isWebcamSetup) {
                 await webcam.play();
                 document.getElementById('scan-line').classList.remove('hidden');
-                document.getElementById('scan-line').style.animation = 'scanAnim 2s infinite linear alternate';
                 window.requestAnimationFrame(loop);
                 return;
             }
@@ -202,8 +214,9 @@
                 maxPredictions = model.getTotalClasses();
                 isModelLoaded = true;
 
+                // Resolusi AI diatur ke 640x480 (Rasio 4:3)
                 const flip = true; 
-                webcam = new tmImage.Webcam(480, 300, flip);
+                webcam = new tmImage.Webcam(640, 480, flip);
                 await webcam.setup(); 
                 await webcam.play();
                 isWebcamSetup = true;
@@ -218,13 +231,11 @@
                 labelContainer = document.getElementById("label-container");
                 
                 document.getElementById('scan-line').classList.remove('hidden');
-                document.styleSheets[0].insertRule('@keyframes scanAnim { from { top: 0; } to { top: 292px; } }', document.styleSheets[0].cssRules.length);
-                document.getElementById('scan-line').style.animation = 'scanAnim 2s infinite linear alternate';
 
                 window.requestAnimationFrame(loop);
             } catch (error) {
                 console.error("Error:", error);
-                if(labelContainer) labelContainer.innerHTML = "Yah, AI-nya ngantuk 😴";
+                if(labelContainer) labelContainer.innerHTML = "Yah, AI-nya ngantuk 😴 (Cek izin kamera)";
             }
         }
 
@@ -258,7 +269,7 @@
             if (isMatch && highestProb > 0.80) { 
                 bar.classList.replace('bg-sky-400', 'bg-green-400');
                 if (labelContainer) {
-                    labelContainer.innerHTML = "🎉 Hore! Ketemu!";
+                    labelContainer.innerHTML = "🎉 Luar Biasa! Benda Ditemukan!";
                     labelContainer.classList.replace('text-slate-600', 'text-green-500');
                 }
                 
@@ -269,7 +280,7 @@
                 document.getElementById('skip-btn').classList.add('hidden');
             } else {
                 if (labelContainer) {
-                    labelContainer.innerHTML = "Mencari " + targetObject + "... 🧐";
+                    labelContainer.innerHTML = "Ayo, bantu temukan " + targetObject + " ... 🧐";
                     labelContainer.classList.replace('text-green-500', 'text-slate-600');
                 }
             }
@@ -328,29 +339,32 @@
                 const trigger = triggers[i];
                 if (currentTime === trigger.time && !trigger.isDone) {
                     trigger.isDone = true; 
-                    triggerInteraction(trigger.object);
+                    triggerInteraction(trigger.object, trigger.context);
                 }
             }
         }
 
-        async function triggerInteraction(objName) {
+        async function triggerInteraction(objName, contextMsg = "Waktunya Beraksi!") {
             targetObject = objName;
             
             if(player && typeof player.pauseVideo === 'function') player.pauseVideo();
             
+            document.getElementById('context-title').innerText = contextMsg + " 🚀";
             document.getElementById('target-name').innerText = objName;
+            
             document.getElementById('success-btn').classList.add('hidden'); 
             document.getElementById('skip-btn').classList.remove('hidden'); 
             
             const lbl = document.getElementById('label-container');
             if(lbl) {
-                lbl.innerHTML = "AI sedang mengamati... 👀";
+                lbl.innerHTML = "AI sedang mengamati layarmu... 👀";
                 lbl.classList.replace('text-green-500', 'text-slate-600');
             }
 
             document.getElementById('confidence-bar').style.width = '0%';
             document.getElementById('confidence-bar').classList.replace('bg-green-400', 'bg-sky-400');
 
+            // Menghapus flex dan memunculkan pop-up
             document.getElementById('scanModal').classList.remove('hidden');
             document.getElementById('scanModal').classList.add('flex');
             
