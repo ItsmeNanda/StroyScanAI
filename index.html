@@ -1,25 +1,63 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STORY-SCAN AI - Wahana Dongeng Interaktif</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-    
+    <script
+        src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
     <style>
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        .slide-up { animation: slideUp 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* Animasi garis scanner dinamis */
         @keyframes scanAnimResponsive {
-            0% { top: 0%; opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { top: 96%; opacity: 0.5; }
+            0% {
+                top: 0%;
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 96%;
+                opacity: 0.5;
+            }
         }
+
         .scan-animation {
             animation: scanAnimResponsive 2.5s infinite ease-in-out alternate;
         }
@@ -32,6 +70,7 @@
             border-radius: 1.5rem;
             border: 6px solid #e0f2fe;
         }
+
         .video-container iframe {
             position: absolute;
             top: 0;
@@ -41,11 +80,21 @@
         }
 
         /* Menyembunyikan scrollbar bawaan agar rapi */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
     </style>
 </head>
+
 <body class="bg-sky-50 min-h-screen font-sans text-slate-700 selection:bg-yellow-200">
 
     <header class="bg-white shadow-sm py-4 mb-8 sticky top-0 z-40 rounded-b-[2rem] border-b-8 border-yellow-300">
@@ -53,44 +102,84 @@
             <h1 class="text-2xl md:text-3xl font-extrabold text-sky-500 tracking-wide flex items-center gap-2">
                 <span class="text-3xl animate-bounce"></span> StoryScan <span class="text-yellow-400">AI</span>
             </h1>
-            <button onclick="showMainMenu()" id="btn-back" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-600 font-bold py-2 px-5 rounded-full transition duration-300 flex items-center gap-2 shadow-sm">
-                 Kembali
+            <button onclick="showMainMenu()" id="btn-back"
+                class="hidden bg-sky-100 hover:bg-sky-200 text-sky-600 font-bold py-2 px-5 rounded-full transition duration-300 flex items-center gap-2 shadow-sm">
+                Kembali
             </button>
         </div>
     </header>
 
-    <main id="page-menu" class="max-w-5xl mx-auto px-4 pb-12 fade-in">
+    <main id="page-menu" class="max-w-6xl mx-auto px-4 pb-12 fade-in">
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-black text-sky-600 mb-4 drop-shadow-sm">Pilih Petualanganmu!</h2>
-            <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto">Siapkan benda-benda di sekitarmu dan mari bantu teman-teman di dalam cerita.</p>
+            <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto">Siapkan benda-benda di sekitarmu dan mari
+                bantu teman-teman di dalam cerita.</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
-            <div onclick="startStory('cerita1')" class="bg-white rounded-[2rem] p-5 shadow-lg border-4 border-sky-200 hover:border-sky-400 hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div onclick="startStory('cerita1')"
+                class="bg-white rounded-[2rem] p-5 shadow-lg border-4 border-sky-200 hover:border-sky-400 hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col">
                 <div class="h-48 bg-sky-100 rounded-3xl mb-5 flex items-center justify-center overflow-hidden relative">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-sky-400 p-4 text-center z-0">
-                         <span class="text-5xl mb-2 group-hover:scale-110 transition">🐘🐜</span>
+                    <div
+                        class="absolute inset-0 flex flex-col items-center justify-center text-sky-400 p-4 text-center z-0">
+                        <span class="text-5xl mb-2 group-hover:scale-110 transition">🐘🐜</span>
                     </div>
-                    <img src="https://img.youtube.com/vi/sMW_fy8Lttg/maxresdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition duration-500" onerror="this.style.display='none'">
+                    <img src="https://img.youtube.com/vi/-P7MDQLeG18/maxresdefault.jpg" alt="Thumbnail"
+                        class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition duration-500"
+                        onerror="this.style.display='none'">
                 </div>
-                <h3 class="text-2xl font-black text-sky-700 mb-2">Kisah Gajah & Semut</h3>
-                <p class="text-slate-500 font-medium mb-4 flex-grow">Ayo bantu kawan-kawan Semut dalam perjalanannya mengumpulkan makanan!</p>
+                <h3 class="text-2xl font-black text-sky-700 mb-2">Leo & Pipo: Petualangan di Kerajaan Angkasa</h3>
+                <p class="text-slate-500 font-medium mb-4 flex-grow">Badai kosmik memadamkan seluruh rasi bintang! Bantu
+                    Leo si astronot cilik dan robot Pipo dengan menunjukkan Buku dan Pensil ke kamera untuk
+                    menghancurkan meteor dan menyalakan kembali cahaya galaksi.
+                </p>
                 <div class="flex items-center gap-2 mt-auto">
-                    <span class="bg-yellow-100 text-yellow-700 text-sm font-bold px-4 py-2 rounded-full border-2 border-yellow-200 shadow-sm">🔍 Benda: Tas, Kursi</span>
+                    <span
+                        class="bg-yellow-100 text-yellow-700 text-sm font-bold px-4 py-2 rounded-full border-2 border-yellow-200 shadow-sm">🔍
+                        Benda: Buku, Pensil</span>
                 </div>
             </div>
 
-            <div onclick="startStory('cerita2')" class="bg-white rounded-[2rem] p-5 shadow-lg border-4 border-pink-200 hover:border-pink-400 hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col">
+            <div onclick="startStory('cerita2')"
+                class="bg-white rounded-[2rem] p-5 shadow-lg border-4 border-pink-200 hover:border-pink-400 hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col">
                 <div class="h-48 bg-pink-50 rounded-3xl mb-5 flex items-center justify-center overflow-hidden relative">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-pink-300 p-4 text-center z-0">
-                         <span class="text-5xl mb-2 group-hover:scale-110 transition">🐰👩‍🏫</span>
+                    <div
+                        class="absolute inset-0 flex flex-col items-center justify-center text-pink-300 p-4 text-center z-0">
+                        <span class="text-5xl mb-2 group-hover:scale-110 transition">🐰👩‍🏫</span>
                     </div>
-                    <img src="https://img.youtube.com/vi/XREMYlL2KwA/maxresdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition duration-500" onerror="this.style.display='none'">
+                    <img src="https://img.youtube.com/vi/4YlMayMkXlI/maxresdefault.jpg" alt="Thumbnail"
+                        class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition duration-500"
+                        onerror="this.style.display='none'">
                 </div>
-                <h3 class="text-2xl font-black text-pink-600 mb-2">Guru Baru Kelinci</h3>
-                <p class="text-slate-500 font-medium mb-4 flex-grow">Temani Cici ke sekolah dan tunjukkan benda untuk membantunya belajar!</p>
+                <h3 class="text-2xl font-black text-pink-600 mb-2">Tobi & Oli: Misi Menuju Desa Melodi</h3>
+                <p class="text-slate-500 font-medium mb-4 flex-grow">Sihir misterius membekukan semua suara di Lembah
+                    Musik! Tunjukkan Penggaris dan Buku milikmu ke kamera untuk membantu Tobi dan robot Oli membuka
+                    jalan dan mengembalikan melodi yang hilang.</p>
                 <div class="flex items-center gap-2 mt-auto">
-                    <span class="bg-yellow-100 text-yellow-700 text-sm font-bold px-4 py-2 rounded-full border-2 border-yellow-200 shadow-sm">🔍 Benda: Buku, Pulpen</span>
+                    <span
+                        class="bg-yellow-100 text-yellow-700 text-sm font-bold px-4 py-2 rounded-full border-2 border-yellow-200 shadow-sm">🔍
+                        Benda: Penggaris, Buku</span>
+                </div>
+            </div>
+            <div onclick="startStory('cerita3')"
+                class="bg-white rounded-[2rem] p-5 shadow-lg border-4 border-green-200 hover:border-green-400 hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col">
+                <div class="h-48 bg-green-50 rounded-3xl mb-5 flex items-center justify-center overflow-hidden relative">
+                    <div
+                        class="absolute inset-0 flex flex-col items-center justify-center text-pink-300 p-4 text-center z-0">
+                        <span class="text-5xl mb-2 group-hover:scale-110 transition">🐰👩‍🏫</span>
+                    </div>
+                    <img src="https://img.youtube.com/vi/QXogdsjkQus/maxresdefault.jpg" alt="Thumbnail"
+                        class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition duration-500"
+                        onerror="this.style.display='none'">
+                </div>
+                <h3 class="text-2xl font-black text-green-600 mb-2">Misi Penyelamatan Kota Digital: Pahlawan Coretan</h3>
+                <p class="text-slate-500 font-medium mb-4 flex-grow">Jembatan Sungai Tinta tertutup coretan hitam! Yuk,
+                    tunjukkan Penghapus milikmu ke kamera untuk membantu Piko si ksatria cilik dan Boni membersihkan
+                    jalan menuju Istana Angka.</p>
+                <div class="flex items-center gap-2 mt-auto">
+                    <span
+                        class="bg-yellow-100 text-yellow-700 text-sm font-bold px-4 py-2 rounded-full border-2 border-yellow-200 shadow-sm">🔍
+                        Benda: Pensil, Penghapus</span>
                 </div>
             </div>
         </div>
@@ -98,71 +187,104 @@
 
     <main id="page-player" class="hidden max-w-4xl mx-auto px-4 pb-12 slide-up">
         <div class="bg-white rounded-[2.5rem] p-6 shadow-xl border-4 border-sky-100 relative">
-            <h2 id="player-title" class="text-2xl md:text-3xl font-black text-center text-sky-600 mb-6">Judul Cerita</h2>
-            
+            <h2 id="player-title" class="text-2xl md:text-3xl font-black text-center text-sky-600 mb-6">Judul Cerita
+            </h2>
+
             <div class="video-container bg-black">
                 <div id="youtube-player"></div>
             </div>
 
             <div class="mt-6 bg-sky-50 rounded-2xl p-4 flex items-center justify-between border-2 border-sky-200">
                 <div class="flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]">
+                    </div>
                     <span class="text-sm font-bold text-sky-700">Mata AI Bekerja 👀</span>
                 </div>
                 <div class="text-sm text-sky-600 font-bold bg-white px-3 py-1 rounded-full shadow-sm">
                     ⏱️ <span id="debug-time">0</span>s
                 </div>
             </div>
-            
-             <div class="mt-4 flex flex-wrap gap-2 justify-center opacity-60 hover:opacity-100 transition-opacity">
-                <button onclick="triggerInteraction('Buku', 'Cici butuh membaca materi pelajaran!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Buku</button>
-                <button onclick="triggerInteraction('Pulpen', 'Ayo bantu Cici mencatat pelajarannya!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Pulpen</button>
-                <button onclick="triggerInteraction('Kursi', 'Kaki Semut pegal, mari istirahat sejenak!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Kursi</button>
-                <button onclick="triggerInteraction('Tas', 'Bantu Semut mengangkat bahan makanan!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Tas</button>
-                <button onclick="triggerInteraction('Meja', 'Ayo cari Meja untuk meletakkan makanan!')" class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test Meja</button>
+
+            <div class="mt-4 flex flex-wrap gap-2 justify-center opacity-60 hover:opacity-100 transition-opacity">
+                <button onclick="triggerInteraction('Buku', 'Cici butuh membaca materi pelajaran!')"
+                    class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test
+                    Buku</button>
+                <button onclick="triggerInteraction('Pulpen', 'Ayo bantu Cici mencatat pelajarannya!')"
+                    class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test
+                    Pulpen</button>
+                <button onclick="triggerInteraction('Kursi', 'Kaki Semut pegal, mari istirahat sejenak!')"
+                    class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test
+                    Kursi</button>
+                <button onclick="triggerInteraction('Tas', 'Bantu Semut mengangkat bahan makanan!')"
+                    class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test
+                    Tas</button>
+                <button onclick="triggerInteraction('Meja', 'Ayo cari Meja untuk meletakkan makanan!')"
+                    class="text-[11px] uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-slate-500 py-2 px-4 rounded-full font-bold shadow-sm">Test
+                    Meja</button>
             </div>
         </div>
     </main>
 
-    <div id="scanModal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md flex-col items-center justify-center z-50 p-2 md:p-4 transition-all duration-300 overflow-hidden">
-        
-        <div class="bg-white rounded-[2rem] p-5 md:p-6 w-full max-w-3xl text-center shadow-2xl relative border-b-[6px] border-sky-100 flex flex-col h-auto max-h-[96vh] my-auto overflow-y-auto no-scrollbar">
-            
+    <div id="scanModal"
+        class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md flex-col items-center justify-center z-50 p-2 md:p-4 transition-all duration-300 overflow-hidden">
+
+        <div
+            class="bg-white rounded-[2rem] p-5 md:p-6 w-full max-w-3xl text-center shadow-2xl relative border-b-[6px] border-sky-100 flex flex-col h-auto max-h-[96vh] my-auto overflow-y-auto no-scrollbar">
+
             <div class="mb-3 flex-shrink-0 mt-2">
-                <h2 id="context-title" class="text-2xl md:text-3xl font-black text-sky-500 mb-2 animate-bounce">Waktunya Beraksi!</h2>
-                <p class="text-slate-500 font-semibold text-base md:text-lg">Carikan <span id="target-name" class="font-black text-yellow-500 text-xl md:text-2xl uppercase tracking-wider bg-yellow-50 px-2 py-1 rounded-xl border border-yellow-200">BENDA</span> untuk membantunya!</p>
+                <h2 id="context-title" class="text-2xl md:text-3xl font-black text-sky-500 mb-2 animate-bounce">Waktunya
+                    Beraksi!</h2>
+                <p class="text-slate-500 font-semibold text-base md:text-lg">Carikan <span id="target-name"
+                        class="font-black text-yellow-500 text-xl md:text-2xl uppercase tracking-wider bg-yellow-50 px-2 py-1 rounded-xl border border-yellow-200">BENDA</span>
+                    untuk membantunya!</p>
             </div>
-            
+
             <div class="my-3 relative mx-auto w-full max-w-[420px] flex-shrink-0" style="aspect-ratio: 4/3;">
-                <div id="webcam-container" class="rounded-2xl overflow-hidden border-4 border-slate-100 shadow-xl w-full h-full bg-slate-800 flex items-center justify-center relative [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-cover">
-                    <span id="loading-cam" class="text-slate-300 font-bold text-sm md:text-base flex flex-col items-center gap-3">
-                        <svg class="animate-spin h-8 w-8 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <div id="webcam-container"
+                    class="rounded-2xl overflow-hidden border-4 border-slate-100 shadow-xl w-full h-full bg-slate-800 flex items-center justify-center relative [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-cover">
+                    <span id="loading-cam"
+                        class="text-slate-300 font-bold text-sm md:text-base flex flex-col items-center gap-3">
+                        <svg class="animate-spin h-8 w-8 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
                         Membuka Lensa Ajaib AI...
                     </span>
                 </div>
-                <div id="scan-line" class="absolute left-0 right-0 mx-auto w-full h-2 bg-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)] hidden z-10 rounded-full scan-animation pointer-events-none"></div>
+                <div id="scan-line"
+                    class="absolute left-0 right-0 mx-auto w-full h-2 bg-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)] hidden z-10 rounded-full scan-animation pointer-events-none">
+                </div>
             </div>
-            
+
             <div class="hidden">
                 <div id="ai-sight">Menyiapkan...</div>
             </div>
 
-            <div class="flex-shrink-0 bg-slate-50 rounded-xl p-3 md:p-4 mb-4 border border-slate-100 mx-auto w-full max-w-[420px]">
-                <div id="label-container" class="font-bold text-lg md:text-xl text-slate-600 mb-2 transition-colors">AI sedang mengamati layarmu... 👀</div>
-                
+            <div
+                class="flex-shrink-0 bg-slate-50 rounded-xl p-3 md:p-4 mb-4 border border-slate-100 mx-auto w-full max-w-[420px]">
+                <div id="label-container" class="font-bold text-lg md:text-xl text-slate-600 mb-2 transition-colors">AI
+                    sedang mengamati layarmu... 👀</div>
+
                 <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden shadow-inner">
-                    <div id="confidence-bar" class="bg-sky-400 h-full rounded-full transition-all duration-300 relative" style="width: 0%">
+                    <div id="confidence-bar" class="bg-sky-400 h-full rounded-full transition-all duration-300 relative"
+                        style="width: 0%">
                         <div class="absolute top-0 left-0 right-0 bottom-0 bg-white/20"></div>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col md:flex-row gap-3 items-center justify-center flex-shrink-0 mb-2">
-                <button id="success-btn" onclick="closeModalAndResume()" class="hidden w-full md:w-auto bg-emerald-500 hover:bg-emerald-400 text-white font-black text-lg md:text-xl tracking-wide py-3 px-8 rounded-full shadow-[0_5px_0_rgb(16,185,129)] hover:shadow-[0_3px_0_rgb(16,185,129)] transform transition-all hover:translate-y-0.5 active:translate-y-1.5 active:shadow-none">
+                <button id="success-btn" onclick="closeModalAndResume()"
+                    class="hidden w-full md:w-auto bg-emerald-500 hover:bg-emerald-400 text-white font-black text-lg md:text-xl tracking-wide py-3 px-8 rounded-full shadow-[0_5px_0_rgb(16,185,129)] hover:shadow-[0_3px_0_rgb(16,185,129)] transform transition-all hover:translate-y-0.5 active:translate-y-1.5 active:shadow-none">
                     ▶ LANJUT CERITA
                 </button>
 
-                <button id="skip-btn" onclick="closeModalAndResume()" class="text-slate-400 hover:text-slate-600 text-sm md:text-base font-bold bg-slate-100 hover:bg-slate-200 py-2 px-6 rounded-full transition-colors">
+                <button id="skip-btn" onclick="closeModalAndResume()"
+                    class="text-slate-400 hover:text-slate-600 text-sm md:text-base font-bold bg-slate-100 hover:bg-slate-200 py-2 px-6 rounded-full transition-colors">
                     Lewati Tugas Ini
                 </button>
             </div>
@@ -173,28 +295,37 @@
     <script>
         const storyData = {
             'cerita1': {
-                title: 'Kisah Gajah dan Semut',
-                videoId: 'sMW_fy8Lttg', 
+                title: 'Leo & Pipo: Petualangan di Kerajaan Angkasa',
+                videoId: '-P7MDQLeG18',
                 triggers: [
-                    { time: 45, object: 'Tas', context: 'Bantu Semut mengangkat bahan makanan!', isDone: false },   
-                    { time: 140, object: 'Kursi', context: 'Kaki Semut pegal, mari istirahat sejenak!', isDone: false },  
+                    { time: 30, object: 'Buku', context: 'Bantu Leo Pipo menghancurkan meteor', isDone: false },
+                    { time: 55, object: 'Pensil', context: 'Bantu Leo Pipo menyalakan cahaya galaksi', isDone: false },
                 ]
             },
             'cerita2': {
-                title: 'Guru Baru Kelinci',
-                videoId: 'XREMYlL2KwA', 
+                title: 'Tobi & Oli: Misi Menuju Desa Melodi',
+                videoId: '4YlMayMkXlI',
                 triggers: [
-                    { time: 50, object: 'Buku', context: 'Cici butuh membaca materi pelajaran!', isDone: false },   
-                    { time: 120, object: 'Pulpen', context: 'Ayo bantu Cici mencatat pelajarannya!', isDone: false }  
+                    { time: 23, object: 'Penggaris', context: 'Bantu Tobi dan Oli memotong gelombang', isDone: false },
+                    { time: 51, object: 'Buku', context: 'Ayo bantu Buku untuk menjadi jembatan!', isDone: false }
+                ]
+            },
+            'cerita3': {
+                title: 'Misi Penyelamatan Kota Digital: Pahlawan Coretan',
+                videoId: 'QXogdsjkQus',
+                triggers: [
+                    { time: 31, object: 'Pulpen', context: 'Bantu Boni membuka gerbang', isDone: false },
+                    { time: 48, object: 'Penghapus', context: 'Cari Penghapus untuk menghapus coretan!', isDone: false }
                 ]
             }
         };
 
-        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/DET9DIWQd/"; 
-        
+        // const MODEL_URL = "https://teachablemachine.withgoogle.com/models/DET9DIWQd/";
+        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/Lq-3WWFip/";
+
         let model, webcam, labelContainer, maxPredictions;
         let isScanning = false;
-        let targetObject = ""; 
+        let targetObject = "";
         let isModelLoaded = false;
         let isWebcamSetup = false;
 
@@ -213,34 +344,32 @@
                 model = await tmImage.load(modelURL, metadataURL);
                 maxPredictions = model.getTotalClasses();
                 isModelLoaded = true;
-
-                // Resolusi AI diatur ke 640x480 (Rasio 4:3)
-                const flip = true; 
+                const flip = true;
                 webcam = new tmImage.Webcam(640, 480, flip);
-                await webcam.setup(); 
+                await webcam.setup();
                 await webcam.play();
                 isWebcamSetup = true;
-                
+
                 document.getElementById('loading-cam').style.display = 'none';
                 const wcContainer = document.getElementById("webcam-container");
                 while (wcContainer.firstChild && wcContainer.firstChild.id !== 'loading-cam' && wcContainer.firstChild.id !== 'scan-line') {
                     wcContainer.removeChild(wcContainer.lastChild);
                 }
                 wcContainer.appendChild(webcam.canvas);
-                
+
                 labelContainer = document.getElementById("label-container");
-                
+
                 document.getElementById('scan-line').classList.remove('hidden');
 
                 window.requestAnimationFrame(loop);
             } catch (error) {
                 console.error("Error:", error);
-                if(labelContainer) labelContainer.innerHTML = "Yah, AI-nya ngantuk 😴 (Cek izin kamera)";
+                if (labelContainer) labelContainer.innerHTML = "Yah, AI-nya ngantuk 😴 (Cek izin kamera)";
             }
         }
 
         async function loop() {
-            if(!isScanning) return;
+            if (!isScanning) return;
             webcam.update();
             await predict();
             window.requestAnimationFrame(loop);
@@ -248,7 +377,7 @@
 
         async function predict() {
             const prediction = await model.predict(webcam.canvas);
-            
+
             let highestProb = 0;
             let currentTopClass = "";
 
@@ -266,16 +395,16 @@
             let namaBendaAI = currentTopClass.trim().toLowerCase();
             const isMatch = (namaBendaAI === targetObject.trim().toLowerCase());
 
-            if (isMatch && highestProb > 0.80) { 
+            if (isMatch && highestProb > 0.80) {
                 bar.classList.replace('bg-sky-400', 'bg-green-400');
                 if (labelContainer) {
                     labelContainer.innerHTML = "🎉 Luar Biasa! Benda Ditemukan!";
                     labelContainer.classList.replace('text-slate-600', 'text-green-500');
                 }
-                
-                isScanning = false; 
+
+                isScanning = false;
                 document.getElementById('scan-line').classList.add('hidden');
-                
+
                 document.getElementById('success-btn').classList.remove('hidden');
                 document.getElementById('skip-btn').classList.add('hidden');
             } else {
@@ -290,7 +419,7 @@
         let currentStoryId = null;
         let timeCheckerInterval;
 
-        function onYouTubeIframeAPIReady() {}
+        function onYouTubeIframeAPIReady() { }
 
         function startStory(storyId) {
             currentStoryId = storyId;
@@ -319,7 +448,7 @@
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
-                if(!timeCheckerInterval) timeCheckerInterval = setInterval(checkVideoTime, 1000);
+                if (!timeCheckerInterval) timeCheckerInterval = setInterval(checkVideoTime, 1000);
             } else {
                 clearInterval(timeCheckerInterval);
                 timeCheckerInterval = null;
@@ -328,17 +457,17 @@
 
         function checkVideoTime() {
             if (!player || typeof player.getCurrentTime !== 'function') return;
-            
+
             const currentTime = Math.floor(player.getCurrentTime());
             document.getElementById('debug-time').innerText = currentTime;
 
-            if(!currentStoryId) return;
+            if (!currentStoryId) return;
             const triggers = storyData[currentStoryId].triggers;
 
             for (let i = 0; i < triggers.length; i++) {
                 const trigger = triggers[i];
                 if (currentTime === trigger.time && !trigger.isDone) {
-                    trigger.isDone = true; 
+                    trigger.isDone = true;
                     triggerInteraction(trigger.object, trigger.context);
                 }
             }
@@ -346,17 +475,17 @@
 
         async function triggerInteraction(objName, contextMsg = "Waktunya Beraksi!") {
             targetObject = objName;
-            
-            if(player && typeof player.pauseVideo === 'function') player.pauseVideo();
-            
+
+            if (player && typeof player.pauseVideo === 'function') player.pauseVideo();
+
             document.getElementById('context-title').innerText = contextMsg;
             document.getElementById('target-name').innerText = objName;
-            
-            document.getElementById('success-btn').classList.add('hidden'); 
-            document.getElementById('skip-btn').classList.remove('hidden'); 
-            
+
+            document.getElementById('success-btn').classList.add('hidden');
+            document.getElementById('skip-btn').classList.remove('hidden');
+
             const lbl = document.getElementById('label-container');
-            if(lbl) {
+            if (lbl) {
                 lbl.innerHTML = "AI sedang mengamati layarmu... 👀";
                 lbl.classList.replace('text-green-500', 'text-slate-600');
             }
@@ -367,7 +496,7 @@
             // Menghapus flex dan memunculkan pop-up
             document.getElementById('scanModal').classList.remove('hidden');
             document.getElementById('scanModal').classList.add('flex');
-            
+
             isScanning = true;
             await initTM();
         }
@@ -376,19 +505,19 @@
             isScanning = false;
             document.getElementById('scanModal').classList.add('hidden');
             document.getElementById('scanModal').classList.remove('flex');
-            
-            if(webcam && isWebcamSetup) {
+
+            if (webcam && isWebcamSetup) {
                 webcam.pause();
                 document.getElementById('scan-line').classList.add('hidden');
             }
 
-            if(player && typeof player.playVideo === 'function') {
+            if (player && typeof player.playVideo === 'function') {
                 player.playVideo();
             }
         }
 
         function showMainMenu() {
-            if(player && typeof player.pauseVideo === 'function') player.pauseVideo();
+            if (player && typeof player.pauseVideo === 'function') player.pauseVideo();
             clearInterval(timeCheckerInterval);
 
             document.getElementById('page-menu').classList.remove('hidden');
@@ -397,4 +526,5 @@
         }
     </script>
 </body>
+
 </html>
